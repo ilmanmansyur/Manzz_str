@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bebek Laundry</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: linear-gradient(to right, #00bcd4, #0097a7);
+}
+
+header {
+    text-align: center;
+    padding: 15px;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.search-box {
+    padding: 10px;
+    text-align: center;
+}
+
+.search-box input {
+    width: 85%;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+}
+
+button {
+    background: #00bcd4;
+    border: none;
+    padding: 8px;
+    color: white;
+    border-radius: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.cart {
+    background: white;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>🐤 Bebek Laundry</header>
+
+<div class="search-box">
+<input type="text" id="search" placeholder="Cari layanan..." onkeyup="cari()">
+</div>
+
+<div class="container" id="list">
+
+<div class="card" data-name="cuci kiloan">
+<h3>Cuci Kiloan</h3>
+<p>Rp5000</p>
+<button onclick="tambah('Cuci Kiloan',5000)">Tambah</button>
+</div>
+
+<div class="card" data-name="cuci setrika">
+<h3>Cuci + Setrika</h3>
+<p>Rp7000</p>
+<button onclick="tambah('Cuci + Setrika',7000)">Tambah</button>
+</div>
+
+<div class="card" data-name="express">
+<h3>Express 1 Hari</h3>
+<p>Rp10000</p>
+<button onclick="tambah('Express 1 Hari',10000)">Tambah</button>
+</div>
+
+<div class="card" data-name="parfum">
+<h3>Parfum Premium</h3>
+<p>Rp3000</p>
+<button onclick="tambah('Parfum Premium',3000)">Tambah</button>
+</div>
+
+</div>
+
+<div class="cart">
+<h3>🛒 Keranjang</h3>
+<ul id="keranjang"></ul>
+<p>Total: Rp <span id="total">0</span></p>
+<button onclick="checkout()">Order via WhatsApp</button>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function tampil() {
+    let list = document.getElementById("keranjang");
+    let total = 0;
+    list.innerHTML = "";
+
+    cart.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = item.nama + " - Rp" + item.harga;
+        list.appendChild(li);
+        total += item.harga;
+    });
+
+    document.getElementById("total").textContent = total;
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function tambah(nama, harga) {
+    cart.push({nama, harga});
+    tampil();
+}
+
+function checkout() {
+    let nomor = "6281234567890"; // GANTI
+    let pesan = "Halo, saya mau order:%0A";
+
+    cart.forEach(item => {
+        pesan += "- " + item.nama + "%0A";
+    });
+
+    window.open("https://wa.me/" + nomor + "?text=" + pesan);
+}
+
+function cari() {
+    let input = document.getElementById("search").value.toLowerCase();
+    let cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+        let nama = card.getAttribute("data-name");
+        card.style.display = nama.includes(input) ? "block" : "none";
+    });
+}
+
+tampil();
+</script>
+
+</body>
+  </html>
